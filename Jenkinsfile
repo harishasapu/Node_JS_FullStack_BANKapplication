@@ -2,9 +2,7 @@ pipeline {
     agent any
     
     tools{
-        jdk 'jdk17'
         nodejs 'node16'
-        
     }
     
     environment{
@@ -14,7 +12,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/jaiswaladi246/fullstack-bank.git'
+                git branch: 'main', url: 'https://github.com/harishasapu/Node_JS_FullStack_BANKapplication.git'
             }
         }
         
@@ -33,7 +31,7 @@ pipeline {
         
         stage('SONARQUBE ANALYSIS') {
             steps {
-                withSonarQubeEnv('sonar') {
+                withSonarQubeEnv('SonarQube') {
                     sh " $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Bank -Dsonar.projectKey=Bank "
                 }
             }
