@@ -3,32 +3,30 @@ pipeline {
     
     tools{
         nodejs 'node16'
+        
     }
-    
     environment{
         SCANNER_HOME= tool 'sonar-scanner'
     }
     
+    
     stages {
         stage('Git Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/harishasapu/Node_JS_FullStack_BANKapplication.git'
+                git branch: 'main', url: 'https://github.com/jaiswaladi246/fullstack-bank.git'
             }
         }
-        
-        stage('OWASP FS SCAN') {
+         stage('OWASP FS SCAN') {
             steps {
                 dependencyCheck additionalArguments: '--scan ./app/backend --disableYarnAudit --disableNodeAudit', odcInstallation: 'DC'
                     dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
         }
-        
         stage('TRIVY FS SCAN') {
             steps {
                 sh "trivy fs ."
             }
         }
-        
         stage('SONARQUBE ANALYSIS') {
             steps {
                 withSonarQubeEnv('SonarQube') {
@@ -36,8 +34,6 @@ pipeline {
                 }
             }
         }
-        
-        
          stage('Install Dependencies') {
             steps {
                 sh "npm install"
@@ -51,16 +47,14 @@ pipeline {
                 }
             }
         }
-        
-        stage('frontend') {
+         stage('frontend') {
             steps {
                 dir('/root/.jenkins/workspace/Bank/app/frontend') {
                     sh "npm install"
                 }
             }
         }
-        
-        stage('Deploy to Conatiner') {
+         stage('Deploy to Conatiner') {
             steps {
                 sh "npm run compose:up -d"
             }
